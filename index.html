@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video to Blog AI - Transform Videos into Engaging Content</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 50px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -150px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            color: white;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 50px;
+            background: #f8f9ff;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 100px 50px;
+            background: white;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 60px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .cta h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        /* Tool Section */
+        .tool-section {
+            padding: 100px 50px;
+            background: #f8f9ff;
+            display: none;
+        }
+
+        .tool-section.active {
+            display: block;
+        }
+
+        .tool-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px;
+        }
+
+        .tool-container h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: #f0f2ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: #e8ebff;
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            transition: border 0.3s ease;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .result-content {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 50px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 80px 20px 50px;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            .features, .how-it-works, .cta, .tool-section {
+                padding: 60px 20px;
+            }
+
+            .tool-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">🎥 VideoBlog AI</div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#" onclick="showTool(); return false;" class="nav-btn">Try It Free</a>
+        </div>
+    </nav>
+
+    <!-- Homepage Content -->
+    <div id="homepage">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Transform Videos into Engaging Blog Posts in Minutes</h1>
+                <p>Harness the power of AI to convert your video content into SEO-optimized blog articles automatically</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="showTool()">Get Started Free</button>
+                    <a href="#how-it-works" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h2>Why Choose VideoBlog AI?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Convert hours of video content into comprehensive blog posts in just minutes with our advanced AI technology.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>SEO Optimized</h3>
+                    <p>Every generated blog post is optimized for search engines with proper headings, keywords, and structure.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3>High Quality</h3>
+                    <p>Our AI understands context and creates engaging, human-like content that resonates with your audience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Multiple Formats</h3>
+                    <p>Support for YouTube, Vimeo, direct uploads, and more. Works with any video format you have.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics Ready</h3>
+                    <p>Generated content is structured and ready to integrate with your existing content management system.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3>Customizable</h3>
+                    <p>Adjust tone, style, and length to match your brand voice and audience preferences perfectly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works" id="how-it-works">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload Your Video</h3>
+                    <p>Simply upload your video file or paste a URL from YouTube, Vimeo, or any video platform.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Processing</h3>
+                    <p>Our advanced AI analyzes the content, extracts key points, and understands the context.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Your Blog Post</h3>
+                    <p>Receive a well-structured, engaging blog post ready to publish on your website.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <h2>Ready to Transform Your Content?</h2>
+            <p>Join thousands of content creators who are saving time and boosting their content output</p>
+            <button class="btn-primary" onclick="showTool()">Start Creating Now</button>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 VideoBlog AI. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Tool Section -->
+    <div id="toolSection" class="tool-section">
+        <div class="tool-container">
+            <a href="#" class="back-btn" onclick="showHome(); return false;">← Back to Home</a>
+            <h2>🎥 Video to Blog AI</h2>
+            <p class="subtitle">Transform your videos into engaging blog posts</p>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📤</div>
+                <p><strong>Click to upload</strong> or drag and drop</p>
+                <p style="color: #999; font-size: 0.9em; margin-top: 5px;">MP4, MOV, AVI (max 100MB)</p>
+                <input type="file" id="fileInput" accept="video/*">
+                <div class="file-name" id="fileName"></div>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0; color: #999;">OR</div>
+
+            <input type="text" class="url-input" id="urlInput" placeholder="Paste video URL (YouTube, Vimeo, etc.)">
+
+            <button class="button" id="generateBtn">Generate Blog Post</button>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your video...</p>
+            </div>
+
+            <div class="result" id="result">
+                <h3>Generated Blog Post</h3>
+                <div class="result-content" id="resultContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const urlInput = document.getElementById('urlInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const resultContent = document.getElementById('resultContent');
+
+        let selectedFile = null;
+
+        function showTool() {
+            document.getElementById('homepage').style.display = 'none';
+            document.getElementById('toolSection').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function showHome() {
+            document.getElementById('homepage').style.display = 'block';
+            document.getElementById('toolSection').classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Upload area click
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                fileName.textContent = `Selected: ${selectedFile.name}`;
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                fileName.textContent = `Selected: ${selectedFile.name}`;
+            }
+        });
+
+        // Generate blog post
+        generateBtn.addEventListener('click', async () => {
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                alert("Please enter a video URL.");
+                return;
+            }
+
+            loading.classList.add('show');
+            result.classList.remove('show');
+
+            try {
+                const response = await fetch('/process-video', { // Updated backend URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ videoUrl: url }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultContent.innerText = data.blogPost;
+                    result.classList.add('show');
+                } else {
+                    alert(data.error || "An error occurred.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Failed to process the video.");
+            } finally {
+                loading.classList.remove('show');
+            }
+        });
+
+        const axios = require('axios');
+
+        function extractVideoId(url) {
+            console.log("Input URL:", url);
+            const regex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)|youtu\.be\/([^&]+)/;
+            const match = url.match(regex);
+
+            if (!match) {
+                console.error("Invalid YouTube URL:", url);
+                return null;
+            }
+
+            const videoId = match[1]?.split('?')[0] || match[2]?.split('?')[0];
+            console.log("Extracted Video ID:", videoId);
+            return videoId;
+        }
+
+        async function fetchTranscript(videoId) {
+            try {
+                const apiKey = "AIzaSyBy0zL4-1hO12UsXg0gYjU0rhjWFn1dnak"; // Replace with your YouTube API key
+
+                // Step 1: Get the list of captions
+                const captionsResponse = await axios.get(
+                    `https://www.googleapis.com/youtube/v3/captions?videoId=${videoId}&key=${apiKey}`
+                );
+
+                const captions = captionsResponse.data.items;
+                if (!captions || captions.length === 0) {
+                    console.error("No captions available for video ID:", videoId);
+                    return null;
+                }
+
+                // Step 2: Download the first caption
+                const captionId = captions[0].id;
+                const downloadResponse = await axios.get(
+                    `https://www.googleapis.com/youtube/v3/captions/${captionId}?key=${apiKey}`,
+                    { headers: { Accept: "text/plain" } }
+                );
+
+                const transcript = downloadResponse.data;
+                console.log("Fetched Transcript:", transcript);
+                return transcript;
+            } catch (error) {
+                console.error("Error fetching transcript:", error.response?.data || error.message);
+                return null;
+            }
+        }
+
+        app.post('/process-video', async (req, res) => {
+            const { videoUrl } = req.body;
+
+            const videoId = extractVideoId(videoUrl);
+            console.log("Extracted Video ID:", videoId);
+
+            if (!videoId) {
+                return res.status(400).json({ error: "Invalid video URL." });
+            }
+
+            const transcript = await fetchTranscript(videoId);
+            if (!transcript) {
+                console.error("Transcript not available for video ID:", videoId);
+                return res.status(500).json({ error: "Transcript not available for this video." });
+            }
+
+            const prompt = createPrompt(transcript);
+            const blogPost = await generateBlogPost(prompt);
+
+            if (blogPost) {
+                res.json({ blogPost });
+            } else {
+                res.status(500).json({ error: "Failed to generate blog post." });
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
